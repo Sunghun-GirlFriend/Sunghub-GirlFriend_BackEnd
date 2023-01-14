@@ -131,6 +131,12 @@ public class QuestService {
             quest.changeStatus(Status.RUNNING);
         } else if(request.getStatus().equals(Status.WAIT)) {
             getWaitTime(quest.getQuestId());
+        } else if(request.getStatus().equals(Status.TERMINATE)) {
+            QuestTime questTime = questTimeRepository.findByQuestId(quest.getQuestId())
+                    .orElseThrow(() -> QuestTimeNotFoundException.EXCEPTION);
+
+            questTimeRepository.delete(questTime);
+            quest.changeStatus(Status.TERMINATE);
         }
         questRepository.save(quest);
     }

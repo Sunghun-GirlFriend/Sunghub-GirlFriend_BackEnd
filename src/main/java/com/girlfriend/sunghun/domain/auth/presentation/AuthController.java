@@ -2,6 +2,7 @@ package com.girlfriend.sunghun.domain.auth.presentation;
 
 import com.girlfriend.sunghun.domain.auth.presentation.dto.request.SignInRequest;
 import com.girlfriend.sunghun.domain.auth.presentation.dto.request.SignUpRequest;
+import com.girlfriend.sunghun.domain.auth.presentation.dto.response.UserRankResponse;
 import com.girlfriend.sunghun.domain.auth.presentation.dto.response.UserTokenResponse;
 import com.girlfriend.sunghun.domain.auth.service.AuthService;
 import io.swagger.annotations.ApiOperation;
@@ -31,5 +32,11 @@ public class AuthController {
             @RequestBody SignInRequest request
     ) {
         return authService.signIn(request);
+    }
+
+    @ApiOperation("유저 랭킹 불러오기")
+    @GetMapping("/ranking")
+    public UserRankResponse getUserRank() {
+        return authService.getUserRank();
     }
 }
