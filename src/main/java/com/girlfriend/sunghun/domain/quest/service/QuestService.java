@@ -1,6 +1,7 @@
 package com.girlfriend.sunghun.domain.quest.service;
 
 import com.girlfriend.sunghun.domain.auth.domain.User;
+import com.girlfriend.sunghun.domain.auth.domain.repository.UserRepository;
 import com.girlfriend.sunghun.domain.auth.facade.UserFacade;
 import com.girlfriend.sunghun.domain.quest.domain.QuestTime;
 import com.girlfriend.sunghun.domain.quest.domain.Quest;
@@ -33,6 +34,7 @@ public class QuestService {
 
     private final QuestRepository questRepository;
     private final QuestTimeRepository questTimeRepository;
+    private final UserRepository userRepository;
     private final UserFacade userFacade;
 
     @Transactional
@@ -154,6 +156,8 @@ public class QuestService {
 
     @Transactional
     public void checkComplete(Long id) {
+        User user = userFacade.queryUser(true);
+
         Quest quest = questRepository.findById(id)
                 .orElseThrow(() -> QuestNotFoundException.EXCEPTION);
 
@@ -164,6 +168,9 @@ public class QuestService {
             quest.changeStatus(Status.COMPLETE);
             questTimeRepository.delete(questTime);
             questRepository.save(quest);
+
+            user.addPoint(50);
+            userRepository.save(user);
         } else {
             throw QuestTimeNotPassedException.EXCEPTION;
         }
